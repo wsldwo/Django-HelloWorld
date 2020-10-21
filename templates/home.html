@@ -1,0 +1,29 @@
+<html>
+<head>
+<style type="text/css">
+			h1 {text-align:center;}
+            fieldset
+            {
+                margin:30px auto;
+                width:400px;
+                height:300px auto;
+                padding:20px auto;
+                color:blue;
+                text-align:center;
+            }
+</style>
+</head>
+<body>
+
+<h1>Hello!This is a website based on django!</h1>
+
+<br>
+
+<fieldset>
+<br><h1><a href="{% url 'welcome' %}">欢迎</a></h1><br>
+<br><h1><a href="{% url 'newhome' %}">新主页</a></h1><br>
+<br><h1><a href="{% url 'PonyApp:pony_home' %}">PonyApp</a></h1><br>
+<br><h1><a href="{% url 'SchoolApp:school_studnet' %}">SchoolApp</a></h1><br>
+</fieldset>
+</body>
+</html>

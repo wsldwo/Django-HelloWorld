@@ -1,0 +1,188 @@
+
+<html>
+<body>
+{% load tags %}
+{% load static %}
+
+<h1>Hello,{{ username }}!</h1>
+
+<p>{{ data_list1 }}</p>   <!-- # 取出整个列表 -->
+<p>{{ data_list1.0 }}</p> <!-- # 取出列表的第一个元素 -->
+<p>{{ data_list1.1 }}</p> <!-- # 取出列表的第二个元素 -->
+<p>{{ data_list1.2 }}</p> <!-- # 取出列表的第三个元素 -->
+
+<p>{{ data_dict1 }}</p> <!-- # 取出整个字典 -->
+<p>{{ data_dict1.歌手 }}</p> <!-- # 取出字典中的歌手元素 -->
+<p>{{ data_dict1.专辑 }}</p> <!-- # 取出字典中的专辑元素 -->
+
+<p>{{ time }} </p>
+
+<!-- # date
+
+根据给定格式对一个日期变量进行格式化。
+
+格式 Y-m-d H:i:s返回 年-月-日 小时:分钟:秒 的格式时间。 -->
+<p>{{ time | date:'Y-m-d H:i:s' }} </p>
+
+
+<!-- # truncatechars
+
+如果字符串包含的字符总个数多于指定的字符数量，那么会被截断掉后面的部分。
+
+截断的字符串将以 ... 结尾。 -->
+<p>{{ data_str1 | truncatechars:5 }} </p>
+
+
+<!-- # safe
+
+将字符串标记为安全，不需要转义。
+
+要保证 views.py 传过来的数据绝对安全，才能用 safe。
+
+和后端 views.py 的 mark_safe 效果相同。
+
+Django 会自动对 views.py 传到HTML文件中的标签语法进行转义，令其语义失效。加 safe 过滤器是告诉 Django 该数据是安全的，不必对其进行转义，可以让该数据语义生效。 -->
+  
+<br><h1><a href="{% url 'home' %}">主页</a></h1><br>
+
+<!-- # if/else 标签
+
+基本语法格式如下：
+
+{% if condition %}
+     ... display
+{% endif %}
+
+或者：
+
+{% if condition1 %}
+   ... display 1
+{% elif condition2 %}
+   ... display 2
+{% else %}
+   ... display 3
+{% endif %} -->
+<p>
+{% if data_score1 > 80  %} 
+your socre is {{data_score1}}, well done!
+{% elif data_score1 > 70 %}
+your socre is {{data_score1}}, keep fighting!
+{% else %}
+your socre is {{data_score1}}.
+{% endif  %}
+</p>
+
+
+<!-- #  for 标签
+
+允许我们在一个序列上迭代。
+
+与 Python 的 for 语句的情形类似，循环语法是 for X in Y ，Y 是要迭代的序列而 X 是在每一个特定的循环中使用的变量名称。
+
+每一次循环中，模板系统会渲染在  for  和 endfor  之间的所有内容。
+
+
+在  for 标签里可以通过 {{forloop}} 变量获取循环序号。
+
+    forloop.counter: 顺序获取循环序号，从 1 开始计算
+    forloop.counter0: 顺序获取循环序号，从 0 开始计算
+    forloop.revcounter: 倒叙获取循环序号，结尾序号为 1
+    forloop.revcounter0: 倒叙获取循环序号，结尾序号为 0
+    forloop.first（一般配合if标签使用）: 第一条数据返回 True，其他数据返回 False
+    forloop.last（一般配合if标签使用）: 最后一条数据返回 True，其他数据返回 False
+
+ -->
+<p>
+
+{% for x in data_list2 %}
+<li> pony {{forloop.counter0}}:{{ x }} </li>
+{% endfor %}
+
+</p>  
+
+<p>
+
+{% for x,y in data_dict2.items %}
+<li>pony {{forloop.revcounter0}}:{{ x }}'s color is {{y}} </li>
+{% endfor %}
+
+</p>  
+<!-- #   empty 标签
+
+可选的  empty  从句：在循环为空的时候执行（即 in 后面的参数布尔值为 False ）。 -->
+<p> 
+
+{% for x in data_list3 %}
+<li>pony {{forloop.counter0}}:{{ x }} </li>
+{% empty %}
+数据为空
+{% endfor %}
+
+</p>  
+<!-- # ifequal/ifnotequal 标签
+
+ ifequal  标签比较两个值，当他们相等时，显示在  ifequal  和  endifequal  之中所有的值。
+
+
+-->
+<p> 
+
+{% ifequal data_list1.0 data_list2.0  %}
+{{data_list1.0}} and {{data_list2.0}} are same
+{% else %}
+{{data_list1.0}} and {{data_list2.0}} are different
+
+{% endifequal %}
+</p>  
+<!-- # 注释标签
+
+Django 注释使用 {# #}。-->
+<p>   </p>  
+
+<!-- # include 标签
+
+{#% include %#} 标签允许在模板中包含其它的模板的内容。
+
+下面这个例子都包含了 nav.html 模板：
+
+{#% include "nav.html" %#} -->
+<p> </p>  
+<!-- # csrf_token
+
+csrf_token 用于form表单中，作用是跨站请求伪造保护。
+
+如果不用｛% csrf_token %｝标签，在用 form 表单时，要再次跳转页面会报403权限错误。
+
+用了｛% csrf_token %｝标签，在 form 表单提交数据时，才会成功。
+
+解析：
+
+首先，向浏览器发送请求，获取登录页面，此时中间件 csrf 会自动生成一个隐藏input标签，该标签里的 value 属性的值是一个随机的字符串，用户获取到登录页面的同时也获取到了这个隐藏的input标签。
+
+然后，等用户需要用到form表单提交数据的时候，会携带这个 input 标签一起提交给中间件 csrf，原因是 form 表单提交数据时，会包括所有的 input 标签，中间件 csrf 接收到数据时，会判断，这个随机字符串是不是第一次它发给用户的那个，如果是，则数据提交成功，如果不是，则返回403权限错误。 -->
+<p> </p>  
+<!-- # 自定义标签(函数)使用 -->
+<p>2 * 3 * 4 = {% tag1 2 3 4 %}</p>  
+<!-- #  在HTML中使用该自定义标签，在页面中动态创建标签。-->
+<p> 
+
+{% tag2 'abc' 'ef' '输入框1' %}
+
+</p>  
+<!-- #  在HTML中使用该自定义标签，在页面中动态创建标签。
+-->
+<p>
+
+{% tag2 'abcd' 'efg' '输入框2' %}
+
+</p>  
+<!-- #  -->
+<p> 
+
+<img src="{% static "images/Samurai Champloo サムライチャンプルー 映像特典 「ノンテロップED」.jpg" %}" alt="ノンテロップED">
+
+</p>  
+
+
+</body>
+</html>
