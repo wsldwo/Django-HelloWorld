@@ -50,6 +50,7 @@ urlpatterns = [
     #path('pony_insert/',views.pony_insert)
     path('PonyApp/',include(('PonyApp.urls','PonyApp'))),#路由分发:元组形式(模块名.urls,命名空间)
     path('SchoolApp/',include(('SchoolApp.urls','SchoolApp'))),#路由分发:元组形式(模块名.urls,命名空间)
+	path('TerminatorApp/',include(('TerminatorApp.urls','TerminatorApp'))),#路由分发:元组形式(模块名.urls,命名空间)
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     
 ]

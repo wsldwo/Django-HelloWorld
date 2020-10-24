@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'testapp',
     'PonyApp',
     'SchoolApp',
+	'TerminatorApp',
 ]
 
 MIDDLEWARE = [
