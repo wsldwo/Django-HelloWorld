@@ -29,22 +29,32 @@ def login(request):
         if not user_obj:
             return render(request,'terminator-index.html',{'submit_result':'Login failed!'})
         else:
-            auth.login(request, user_obj)
+            #auth.login(request, user_obj)
             #传数据
             request.session['username'] = request.POST['username_login']
             request.session['password'] = request.POST['password_login']
             return redirect(reverse('TerminatorApp:terminator_comment'))
     return render(request,'terminator-index.html',{})
 
-@login_required
 def comment(request):
-    userinfo = 'Hello,'+request.session.get('username')+'!'+'<br>'+'Your password is '+request.session.get('password')
-    if request.POST:
-        if request.POST['message'] != '':
-            Comment.objects.create(content=request.POST['message'],author=request.session.get('username'),date=dt.now())## dt.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    user_obj = auth.authenticate(username=request.session.get('username'), password=request.session.get('password'))
+    if not user_obj:
+        return redirect(reverse('TerminatorApp:terminator_index'))
+    else:
+
+        data = {}
+        userinfo = 'Hello,'+request.session.get('username')+'!'+'<br>'+'Your password is '+request.session.get('password')
+        data['userinfo'] = userinfo
+
+        if request.POST:
+            if request.POST['message'] != '':
+                Comment.objects.create(content=request.POST['message'],author=request.session.get('username'),date=dt.now())## dt.now().strftime('%Y-%m-%d %H:%M:%S')
             
-    lc = Comment.objects.all()
-    lccount = Comment.objects.all().count()
-    return render(request,'terminator-comment.html',{'userinfo':userinfo,
-        'comment1':lc[lccount-1].content,'comment2':lc[lccount-2].content,'comment3':lc[lccount-3].content,'comment4':lc[lccount-4].content,'comment5':lc[lccount-5].content,'comment6':lc[lccount-6].content,
-        })
+        comments = Comment.objects.all()
+    
+        for no,com in enumerate(reversed(comments)):
+            data['comment'+str(no+1)] = com.content
+
+        return render(request,'terminator-comment.html',data)
+
