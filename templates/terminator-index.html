@@ -110,51 +110,60 @@
 									</ul>
 									<div class="tab-content">
 										<div class="tab-content-inner active" data-content="signup">
-											<form action="#">
+											<form action="{% url 'TerminatorApp:terminator_signup' %}" onsubmit="return checkSubmit();" method='post'>
 												<div class="row form-group">
 													<div class="col-md-12">
 														<label for="username">Username or Email</label>
-														<input type="text" class="form-control" id="username">
+														<input type="text" class="form-control" id="username" name="username" required="required" onfocus="showTips('span_username','用户名长度为5~12位字符！')" onblur="checkUsername()" onkeyup="checkUsername()">
+														<span id="span_username"></span>
 													</div>
 												</div>
 												<div class="row form-group">
 													<div class="col-md-12">
 														<label for="password">Password</label>
-														<input type="password" class="form-control" id="password">
+														<input type="password" class="form-control" id="password" name="password" required="required" onfocus="showTips('span_password','密码长度为8~20位字符！')" onblur="checkPassword()" onkeyup="checkPassword()">
+														<span id="span_password"></span>
 													</div>
 												</div>
 												<div class="row form-group">
 													<div class="col-md-12">
 														<label for="password2">Repeat Password</label>
-														<input type="password" class="form-control" id="password2">
+														<input type="password" class="form-control" id="password2" name="password2" required="required" onfocus="showTips('span_password2','密码长度为8~20位字符！')" onblur="checkPassword2()" onkeyup="checkPassword2()">
+														<span id="span_password2"></span>
 													</div>
 												</div>
 
 												<div class="row form-group">
 													<div class="col-md-12">
+														{% csrf_token %}
 														<input type="submit" class="btn btn-primary" value="Sign up">
+														<br>
+														<span id="span_submit"><font color='red' size='2'>{{ submit_result | safe}}</font></span>
 													</div>
 												</div>
 											</form>	
 										</div>
 
 										<div class="tab-content-inner" data-content="login">
-											<form action="#">
+											<form action="{% url 'TerminatorApp:terminator_login' %}" onsubmit="return checkSubmit_login();" method='post'>
 												<div class="row form-group">
 													<div class="col-md-12">
 														<label for="username">Username or Email</label>
-														<input type="text" class="form-control" id="username">
+														<input type="text" class="form-control" id="username_login" name="username_login" required="required" onfocus="showTips('span_username','用户名长度为5~12位字符！')" onblur="checkUsername_login()" onkeyup="checkUsername_login()">
+														<span id="span_username_login"></span>
 													</div>
 												</div>
 												<div class="row form-group">
 													<div class="col-md-12">
 														<label for="password">Password</label>
-														<input type="password" class="form-control" id="password">
+														<input type="password" class="form-control" id="password_login" name="password_login" required="required" onfocus="showTips('span_password','密码长度为8~20位字符！')" onblur="checkPassword_login()" onkeyup="checkPassword_login()">
+														<span id="span_password_login"></span>
 													</div>
 												</div>
 
 												<div class="row form-group">
 													<div class="col-md-12">
+														{% csrf_token %}
 														<input type="submit" class="btn btn-primary" value="Login">
 													</div>
 												</div>
@@ -539,7 +548,145 @@
 	<script src="{% static 'js/magnific-popup-options.js' %}"></script>
 	<!-- Main -->
 	<script src="{% static 'js/main.js' %}"></script>
+	<!-- Form Check -->
+	<script type="text/javascript">
+	function checkUsername(){
+	    var name = document.getElementById("username").value.trim();
+        var span = document.getElementById("span_username");
+		var pattern = /^[0-9a-zA-Z]{5,12}$/
+		if(name.length == 0){
+		    span.innerHTML = "<font color='red' size='2'>用户名不能为空！</font>";
+            return false;
+		}
+		else if(name.length < 5 || name.length > 12){
+		    span.innerHTML = "<font color='red' size='2'>用户名长度为5~12位字符！</font>";
+            return false;
+		}
+		else if(!pattern.test(name)){
+			span.innerHTML = "<font color='red' size='2'>用户名只包含字母或数字！</font>";
+			return false;
+		}
+		else{
+			span.innerHTML = "<font color='green' size='2'>用户名可用！</font>";
+			return true;
+		}
+	}
+	function checkPassword(){
+		var pass = document.getElementById("password").value.trim();
+        var span = document.getElementById("span_password");
+		var pattern = /^[0-9a-zA-Z]{5,12}$/
+		if(pass.length == 0){
+			span.innerHTML = "<font color='red' size='2'>密码不能为空！</font>";
+            return false;
+		}
+		else if(pass.length < 8 || pass.length > 20){
+			span.innerHTML = "<font color='red' size='2'>密码长度为8~20位字符！</font>";
+            return false;
+		}
+		else if(!(/[A-Z]/.test(pass) && /[a-z]/.test(pass) && /[0-9]/.test(pass) && /[!@#$%^&*()_+]/.test(pass))){
+			span.innerHTML = "<font color='red' size='2'>密码必须包含数字、大小写字母、特殊字符！</font>";
+            return false;
+		}
+		else{
+			span.innerHTML = "<font color='green' size='2'>密码可用！</font>";
+			return true;
+		}
+	}
+	function checkPassword2(){
+		var pass_ = document.getElementById("password").value.trim();
+		var pass = document.getElementById("password2").value.trim();
+        var span = document.getElementById("span_password2");
+		var pattern = /^[0-9a-zA-Z]{5,12}$/;
+		if(pass.length == 0){
+			span.innerHTML = "<font color='red' size='2'>密码不能为空！</font>";
+            return false;
+		}
+		else if(pass != pass_){
+			span.innerHTML = "<font color='red' size='2'>密码不相同！</font>";
+            return false;
+		}
+		else if(!(/[A-Z]/.test(pass) && /[a-z]/.test(pass) && /[0-9]/.test(pass) && /[!@#$%^&*()_+]/.test(pass))){
+			span.innerHTML = "<font color='red' size='2'>密码必须包含数字、大小写字母、特殊字符！</font>";
+            return false;
+		}
+		else{
+			span.innerHTML = "<font color='green' size='2'>密码可用！</font>";
+			return true;
+		}
+		
+	}
+	function checkSubmit(){
+		var con1 = checkUsername();
+		var con2 = checkPassword();
+		var con3 = checkPassword2();
+		if(con1 && con2 && con3){
+			return true;
+		}
+		else{
+			return false;
+		}
+	
+	}
+	function checkUsername_login(){
+		var name = document.getElementById("username_login").value.trim();
+        var span = document.getElementById("span_username_login");
+		var pattern = /^[0-9a-zA-Z]{5,12}$/
+		if(name.length == 0){
+		    span.innerHTML = "<font color='red' size='2'>用户名不能为空！</font>";
+            return false;
+		}
+		else if(name.length < 5 || name.length > 12){
+		    span.innerHTML = "<font color='red' size='2'>用户名长度为5~12位字符！</font>";
+            return false;
+		}
+		else if(!pattern.test(name)){
+			span.innerHTML = "<font color='red' size='2'>用户名只包含字母或数字！</font>";
+			return false;
+		}
+		else{
+			span.innerHTML = "<font color='green' size='2'>用户名可用！</font>";
+			return true;
+		}
+	
+	}
+	function checkPassword_login(){
+		var pass = document.getElementById("password_login").value.trim();
+        var span = document.getElementById("span_password_login");
+		var pattern = /^[0-9a-zA-Z]{5,12}$/
+		if(pass.length == 0){
+			span.innerHTML = "<font color='red' size='2'>密码不能为空！</font>";
+            return false;
+		}
+		else if(pass.length < 8 || pass.length > 20){
+			span.innerHTML = "<font color='red' size='2'>密码长度为8~20位字符！</font>";
+            return false;
+		}
+		else if(!(/[A-Z]/.test(pass) && /[a-z]/.test(pass) && /[0-9]/.test(pass) && /[!@#$%^&*()_+]/.test(pass))){
+			span.innerHTML = "<font color='red' size='2'>密码必须包含数字、大小写字母、特殊字符！</font>";
+            return false;
+		}
+		else{
+			span.innerHTML = "<font color='green' size='2'>密码可用！</font>";
+			return true;
+		}
+	
+	}
+	function checkSubmit_login(){
+		var con1 = checkUsername_login();
+		var con2 = checkPassword_login();
+		if(con1 && con2){
+			return true;
+		}
+		else{
+			return false;
+		}
+	
+	}
+	
+	</script>
+	
 
 	</body>
+	
 </html>
 

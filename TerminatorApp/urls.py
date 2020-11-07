@@ -42,13 +42,8 @@ from . import views
 '''
     
 urlpatterns = [
-    #path('school/',views.school,name='school_home'),#name="路由别名"
-    #path('add_student/',views.add_student,name='school_add_student'),
-    #path('login/',views.login,name='school_login'),
-    #path('logout/',views.logout,name='school_logout'),
-    #path('student/',views.student,name='school_studnet'),
-    #path('student_search/',views.student_search,name='student_search'),
-    #path('student_insert/',views.student_insert,name='student_insert'),
 	path('index/',views.index,name='terminator_index'),
-    
+    path('signup/',views.signup,name='terminator_signup'),
+    path('login/',views.login,name='terminator_login'),
+    path('comment/',views.comment,name='terminator_comment'),
 ]
