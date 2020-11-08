@@ -138,6 +138,7 @@
 							<div class="col-md-12">
 								<label class="sr-only" for="message">Message</label>
 								<textarea name="message" id="message" cols="30" rows="10" class="form-control" placeholder="Write us something"></textarea>
+								<span id="span_message"></span>
 							</div>
 						</div>
 						<div class="form-group">
@@ -259,8 +260,11 @@
 	<script type="text/javascript">
 	function checkSubmit(){
 		var comment = document.getElementById("message").value.trim();
-		if(comment.length < 3)
+		var span = document.getElementById("span_message");
+		if(comment.length < 3 || comment.length > 500){
+		span.innerHTML = "<font color='red' size='2'>内容长度为3~500个字符！</font>";
 		return false;
+		}
 		else
 		return true;
 	}

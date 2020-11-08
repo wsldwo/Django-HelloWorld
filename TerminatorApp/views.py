@@ -52,9 +52,12 @@ def comment(request):
                 Comment.objects.create(content=request.POST['message'],author=request.session.get('username'),date=dt.now())## dt.now().strftime('%Y-%m-%d %H:%M:%S')
             
         comments = Comment.objects.all()
+        commentLen = 6
     
-        for no,com in enumerate(reversed(comments)):
-            data['comment'+str(no+1)] = com.content
+        for no,com in enumerate(reversed(comments),start=1):
+            data['comment'+str(no)] = com.content
+            if no >= commentLen:#性能优化
+                break
 
         return render(request,'terminator-comment.html',data)
 

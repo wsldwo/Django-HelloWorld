@@ -558,14 +558,14 @@
 		    span.innerHTML = "<font color='red' size='2'>用户名不能为空！</font>";
             return false;
 		}
-		else if(name.length < 5 || name.length > 12){
-		    span.innerHTML = "<font color='red' size='2'>用户名长度为5~12位字符！</font>";
+		else if(name.length < 2 || name.length > 12){
+		    span.innerHTML = "<font color='red' size='2'>用户名长度为2~12位字符！</font>";
             return false;
 		}
-		else if(!pattern.test(name)){
+		/*else if(!pattern.test(name)){
 			span.innerHTML = "<font color='red' size='2'>用户名只包含字母或数字！</font>";
 			return false;
-		}
+		}*/
 		else{
 			span.innerHTML = "<font color='green' size='2'>用户名可用！</font>";
 			return true;
@@ -635,14 +635,14 @@
 		    span.innerHTML = "<font color='red' size='2'>用户名不能为空！</font>";
             return false;
 		}
-		else if(name.length < 5 || name.length > 12){
-		    span.innerHTML = "<font color='red' size='2'>用户名长度为5~12位字符！</font>";
+		else if(name.length < 2 || name.length > 12){
+		    span.innerHTML = "<font color='red' size='2'>用户名长度为2~12位字符！</font>";
             return false;
 		}
-		else if(!pattern.test(name)){
+		/*else if(!pattern.test(name)){
 			span.innerHTML = "<font color='red' size='2'>用户名只包含字母或数字！</font>";
 			return false;
-		}
+		}*/
 		else{
 			span.innerHTML = "<font color='green' size='2'>用户名可用！</font>";
 			return true;
