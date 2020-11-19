@@ -55,7 +55,7 @@ def comment(request):
         commentLen = 6
     
         for no,com in enumerate(reversed(comments),start=1):
-            data['comment'+str(no)] = com.content
+            data['comment'+str(no)] = com.content + '<br>' + 'by  ' + com.author + '  on  ' + com.date.strftime('%Y-%m-%d %H:%M:%S')
             if no >= commentLen:#性能优化
                 break
 
